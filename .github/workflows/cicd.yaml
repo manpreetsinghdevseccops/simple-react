@@ -3,7 +3,7 @@ on:
     branches:
       - main
 jobs:
-  owasp-dependency-check:
+  dependency-check:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -34,7 +34,7 @@ jobs:
         with:
           name: dependency-check-report
           path: reports/dependency-check-report.html
-  unit-testing:
+  build-and-test:
     needs: dependency-check
     runs-on: ubuntu-latest
     steps:
