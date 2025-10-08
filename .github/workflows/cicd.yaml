@@ -24,10 +24,9 @@ jobs:
         uses: dependency-check/Dependency-Check_Action@main
         with:
           project: myorg-nodejs-project
-          scanPath: .
-          format: HTML
-          outDir: reports
-          javaHome: /opt/jdk
+          path: "."
+          format: "HTML"
+          out: "reports"
       - name: Upload report
         uses: actions/upload-artifact@v4
         with:
