@@ -3,6 +3,26 @@ on:
     branches:
       - main
 jobs:
+  unit-testing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Install dependencies
+        run: npm install
+      - name: Unit Testing
+        run: react-scripts test --env=jsdom
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
   dependency-check:
     runs-on: ubuntu-latest
     steps:
@@ -34,30 +54,9 @@ jobs:
         with:
           name: dependency-check-report
           path: reports/dependency-check-report.html
-  build-and-test:
-    needs: dependency-check
+  deploy:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-      - name: Install dependencies
-        run: npm install
-      - name: Unit Testing
-        run: react-scripts test --env=jsdom
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-  build:
-    needs: build-and-test
-    runs-on: ubuntu-latest
+    needs: unit-testing
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
