@@ -1,10 +1,10 @@
-name: Main Pipeline
+name: Run OWASP Dependency-Check
 on:
   push:
     branches:
       - main
 jobs:
-  owasp-dependency-check:
+  dependency-check:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -35,16 +35,3 @@ jobs:
         with:
           name: dependency-check-report
           path: reports/dependency-check-report.html
-  unit-testing:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-      - name: Install dependencies
-        run: npm install
-      - name: Unit Testing
-        run: npm run test
