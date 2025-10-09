@@ -1,10 +1,10 @@
-name: Run OWASP Dependency-Check and Deploy to Amazon ECR
+name: Main Pipeline
 on:
   push:
     branches:
       - main
 jobs:
-  dependency-check:
+  owasp-dependency-check:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -35,7 +35,21 @@ jobs:
         with:
           name: dependency-check-report
           path: reports/dependency-check-report.html
+  unit-testing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install dependencies
+        run: npm install
+      - name: Unit Testing
+        run: npm run test
   build:
+    needs: unit-testing
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -49,22 +63,24 @@ jobs:
       - name: Login to Amazon ECR
         run: |
           ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
-          REPO_URI=${ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com
           echo "ACCOUNT_ID=$ACCOUNT_ID" >> $GITHUB_ENV
+          REPO_URI=${ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com
           echo "REPO_URI=$REPO_URI" >> $GITHUB_ENV
-          aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${REPO_URI}
+          aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com
       - name: Create ECR repository
         run: |
-          REPO_NAME=simple-react
-          if ! aws ecr describe-repositories --region ap-south-1 --repository-names ${REPO_NAME} 2>/dev/null; then
-            aws ecr create-repository --region ap-south-1 --repository-name ${REPO_NAME}
+          REPO_NAME=${GITHUB_REPOSITORY##*/}
+          if ! aws ecr describe-repositories --region ap-south-1 --repository-names $REPO_NAME 2>/dev/null; then
+            aws ecr create-repository --region ap-south-1 --repository-name $REPO_NAME
           fi
       - name: Build and push Docker image
         run: |
-          docker build -t ${REPO_URI}/simple-react:latest .
-          docker tag ${REPO_URI}/simple-react:latest ${REPO_URI}/simple-react:${GITHUB_SHA:0:7}
-          docker push ${REPO_URI}/simple-react:latest
-          docker push ${REPO_URI}/simple-react:${GITHUB_SHA:0:7}
+          REPO_NAME=${GITHUB_REPOSITORY##*/}
+          docker build -t $REPO_NAME .
+          docker tag $REPO_NAME:latest $REPO_URI/$REPO_NAME:latest
+          docker tag $REPO_NAME:latest $REPO_URI/$REPO_NAME:${GITHUB_SHA:0:7}
+          docker push $REPO_URI/$REPO_NAME:latest
+          docker push $REPO_URI/$REPO_NAME:${GITHUB_SHA:0:7}
       - name: Verify deployment
         run: |
           docker images
