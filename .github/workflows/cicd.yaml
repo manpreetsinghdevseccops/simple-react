@@ -1,51 +1,43 @@
-name: Combined Pipeline
+name: SonarQube Code Quality Check
+
 on:
   push:
     branches:
       - main
+
 jobs:
-  
-  sonar-scan:
-     runs-on: ubuntu-latest
-     steps:
-       - name: SonarQube Scan
-         uses: SonarSource/sonarqube-scan-action@master
-         env:
-            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-            SONAR_HOST_URL: https://k8s-manpreet-sonarqub-d7b95aae0f-805655896.ap-south-1.elb.amazonaws.com/sonarqube
-  build:
+  sonarqube-scan:
+    name: SonarQube Scan
     runs-on: ubuntu-latest
-    needs: sonar-scan
+
     steps:
-      - name: Checkout code
+      - name: Checkout Repository
         uses: actions/checkout@v3
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-south-1
-      - name: Login to Amazon ECR
-        run: |
-          ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
-          echo "ACCOUNT_ID=$ACCOUNT_ID" >> $GITHUB_ENV
-          REPO_URI=${ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com
-          echo "REPO_URI=$REPO_URI" >> $GITHUB_ENV
-          aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com
-      - name: Create ECR repository
-        run: |
-          REPO_NAME=${GITHUB_REPOSITORY##*/}
-          if ! aws ecr describe-repositories --region ap-south-1 --repository-names $REPO_NAME 2>/dev/null; then
-            aws ecr create-repository --region ap-south-1 --repository-name $REPO_NAME
-          fi
-      - name: Build and push Docker image
-        run: |
-          REPO_NAME=${GITHUB_REPOSITORY##*/}
-          docker build -t $REPO_URI/$REPO_NAME:latest .
-          docker tag $REPO_URI/$REPO_NAME:latest $REPO_URI/$REPO_NAME:${GITHUB_SHA:0:7}
-          docker push $REPO_URI/$REPO_NAME:latest
-          docker push $REPO_URI/$REPO_NAME:${GITHUB_SHA:0:7}
-      - name: Verify deployment
-        run: |
-          docker images
-          echo "Deployment successful"
+          fetch-depth: 0  # required for SonarQube analysis
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '16'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      # - name: Run Tests and Coverage
+      #   run: npm run test -- --coverage --watchAll=false
+
+      - name: SonarQube Scan
+        uses: sonarsource/sonarqube-scan-action@v2
+        with:
+          projectBaseDir: .
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: https://k8s-manpreet-sonarqub-d7b95aae0f-805655896.ap-south-1.elb.amazonaws.com/sonarqube
+
+      # # Optional: Fails pipeline if quality gate fails
+      # - name: SonarQube Quality Gate
+      #   uses: sonarsource/sonarqube-quality-gate-action@v1.1.0
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #     SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
