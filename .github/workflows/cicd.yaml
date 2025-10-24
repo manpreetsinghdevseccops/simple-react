@@ -56,7 +56,7 @@ jobs:
          uses: SonarSource/sonarqube-scan-action@master
          env:
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-            SONAR_HOST_URL: http://localhost:9000/sonarqube
+            SONAR_HOST_URL: https://k8s-manpreet-sonarqub-d7b95aae0f-805655896.ap-south-1.elb.amazonaws.com/sonarqube
   build:
     runs-on: ubuntu-latest
     needs: sonar-scan
