@@ -33,7 +33,7 @@ jobs:
           projectBaseDir: .
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: https://k8s-manpreet-sonarqub-d7b95aae0f-805655896.ap-south-1.elb.amazonaws.com/sonarqube
+          SONAR_HOST_URL: https://k8s-manpreet-sonarqub-d7b95aae0f-2067696507.ap-south-1.elb.amazonaws.com/
 
       # # Optional: Fails pipeline if quality gate fails
       # - name: SonarQube Quality Gate
