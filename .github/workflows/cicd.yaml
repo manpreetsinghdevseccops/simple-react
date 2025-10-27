@@ -26,10 +26,6 @@ jobs:
 
       # - name: Run Tests and Coverage
       #   run: npm run test -- --coverage --watchAll=false
-      - name: Run SonarQube Scan (ignore SSL)
-        run: |
-          export SONAR_SCANNER_OPTS="-Djavax.net.ssl.trustAll=true"
-          sonar-scanner
 
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@v2
@@ -38,6 +34,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: https://k8s-manpreet-sonarqub-d7b95aae0f-2067696507.ap-south-1.elb.amazonaws.com/
+          SONAR_SCANNER_OPTS: "-Djavax.net.ssl.trustAll=true"
 
       # # Optional: Fails pipeline if quality gate fails
       # - name: SonarQube Quality Gate
