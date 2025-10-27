@@ -34,7 +34,11 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: https://k8s-manpreet-sonarqub-d7b95aae0f-2067696507.ap-south-1.elb.amazonaws.com/
-          SONAR_SCANNER_OPTS: "-Djavax.net.ssl.trustAll=true -Dsonar.verbose=true"
+          SONAR_SCANNER_OPTS: >-
+            -Dsonar.verbose=true
+            -Djavax.net.ssl.trustAll=true
+            -Dcom.sun.net.ssl.checkRevocation=false
+            -Djsse.enableSNIExtension=false
       # # Optional: Fails pipeline if quality gate fails
       # - name: SonarQube Quality Gate
       #   uses: sonarsource/sonarqube-quality-gate-action@v1.1.0
