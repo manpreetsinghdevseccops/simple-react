@@ -38,7 +38,7 @@ jobs:
           projectBaseDir: .
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: https://k8s-manpreet-sonarqub-d7b95aae0f-2067696507.ap-south-1.elb.amazonaws.com/
+          SONAR_HOST_URL: https://k8s-manpreet-sonarqub-d7b95aae0f-2067696507.ap-south-1.elb.amazonaws.com/:9000
           SONAR_SCANNER_OPTS: >-
             -Dsonar.verbose=true
             -Djavax.net.ssl.trustAll=true
