@@ -15,11 +15,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0  # required for SonarQube analysis
-
-      - name: disable ssl checks (unsafe)
-        run: |
-          export GIT_SSL_NO_VERIFY=true
-          export NODE_TLS_REJECT_UNAUTHORIZED=0
+          
           
       - name: Setup Node.js
         uses: actions/setup-node@v4
