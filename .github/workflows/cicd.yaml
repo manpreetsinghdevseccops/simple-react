@@ -14,13 +14,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-          cache: 'npm'
-      - name: Install dependencies
-        run: npm ci
       - name: Run OWASP Dependency-Check
         uses: dependency-check/Dependency-Check_Action@main
         env:
@@ -35,7 +28,6 @@ jobs:
         with:
           name: dependency-check-report
           path: reports/dependency-check-report.html
-  
   build:
     runs-on: ubuntu-latest
     steps:
@@ -63,7 +55,7 @@ jobs:
       - name: Build and push Docker image
         run: |
           REPO_NAME=${GITHUB_REPOSITORY##*/}
-          docker build -t $REPO_NAME .
+          docker build -t $REPO_NAME:latest .
           docker tag $REPO_NAME:latest $REPO_URI/$REPO_NAME:latest
           docker tag $REPO_NAME:latest $REPO_URI/$REPO_NAME:${GITHUB_SHA:0:7}
           docker push $REPO_URI/$REPO_NAME:latest
@@ -81,7 +73,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: '16'
       - name: Install dependencies
         run: npm install
       - name: Unit Testing
