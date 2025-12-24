@@ -1,4 +1,4 @@
-name: Merged CI/CD Pipeline
+name: CI/CD Pipeline
 
 on:
   push:
@@ -47,8 +47,8 @@ jobs:
           docker images
 
   unit-testing:
-    needs: [build]
     runs-on: ubuntu-latest
+    needs: [build]
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -69,8 +69,8 @@ jobs:
     - name: Set up Java
       uses: actions/setup-java@v3
       with:
-        distribution: 'temurin'
         java-version: '17'
+        distribution: 'temurin'
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
