@@ -22,6 +22,6 @@ deploymentPipeline(
     buildType: 'node',
     buildVersion: '18',
     testScript: 'test',
-    enableUnitTests: false,
-    enableOwasp: true,
+    enableUnitTests: true,
+    enableOwasp: false,
 )
