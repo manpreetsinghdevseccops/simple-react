@@ -2,7 +2,7 @@
                                                                                                                                                                                
   deploymentPipeline(                                                                                                                                                          
       // ── Core (required) ───────────────────────────────────────────────                                                                                                    
-      codeRepoUrl  : 'https://github.com/devseccops/simple-react.git',                                                                                                     
+      codeRepoUrl  : 'https://github.com/manpreetsinghdevseccops/simple-react.git',                                                                                                     
       branchName   : 'main',                                                                                                                                                   
       imageName    : 'simple-react',                                                                                                                                       
       ecrName      : 'simple-react',                                                                                                                                       
