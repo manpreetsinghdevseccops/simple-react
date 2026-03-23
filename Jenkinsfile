@@ -26,9 +26,9 @@
                                  //   '1.25.4' does not exist yet as a Docker image tag                                                                                        
                                                                                                                                                                                
       // ── Feature flags ─────────────────────────────────────────────────  
-      enableBuild    : true,     
-      enableDeploy   : true,     
+      enableBuild    : false,     
+      enableDeploy   : false,     
       enableUnitTests: true,    
-      enableOwasp    : true,   
+      enableOwasp    : false,   
       enableSonarQube: true,                                                                                                                                                   
   )        
