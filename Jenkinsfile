@@ -27,7 +27,7 @@ deploymentPipeline(
     // ── Feature flags ─────────────────────────────────────────────────
     enableBuild    : true,
     enableDeploy   : false,
-    enableUnitTests: false,
+    enableUnitTests: true,
     enableOwasp    : false,
     enableSonarQube: true,
 )
