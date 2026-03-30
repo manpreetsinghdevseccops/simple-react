@@ -9,7 +9,7 @@ deploymentPipeline(
     serviceName  : 'simple-react',
     awsAccount   : '130705418859',
     awsRegion    : 'ap-south-1',
-    credentialsId: 'github-token',
+    credentialsId: 'github-token-cred',
 
     // ── Deploy / GitOps (required when enableUpdateValuesYaml=true) ───
     organization         : 'devseccops',
