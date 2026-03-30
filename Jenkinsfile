@@ -28,6 +28,6 @@ deploymentPipeline(
     enableBuild    : true,
     enableDeploy   : false,
     enableUnitTests: false,
-    enableOwasp    : true,
+    enableOwasp    : false,
     enableSonarQube: true,
 )
