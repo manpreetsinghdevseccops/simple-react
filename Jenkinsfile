@@ -13,12 +13,12 @@ deploymentPipeline(
 
     // ── Deploy / GitOps (required when enableUpdateValuesYaml=true) ───
     organization         : 'devseccops',
-    organizationManifests: '',
+    organizationManifests: 'devseccops-service-configs',
     valuesFile           : 'simple-react/values.yaml',
     configBranch         : 'dev',
-    gitUsername          : '',
-    gitEmail             : '',
-    enableUpdateValuesYaml: false,
+    gitUsername          : 'manpreetsinghdevseccops',
+    gitEmail             : 'manpreet@devseccops.ai',
+    enableUpdateValuesYaml: true,
 
     // ── Build type ────────────────────────────────────────────────────
     buildType   : 'js',
@@ -26,8 +26,8 @@ deploymentPipeline(
 
     // ── Feature flags ─────────────────────────────────────────────────
     enableBuild    : true,
-    enableDeploy   : false,
+    enableDeploy   : true,
     enableUnitTests: true,
     enableOwasp    : true,
-    enableSonarQube: false,
+    enableSonarQube: true,
 )
