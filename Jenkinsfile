@@ -22,7 +22,7 @@ deploymentPipeline(
 
     // ── Build type ────────────────────────────────────────────────────
     buildType   : 'js',
-    buildVersion: '18',
+    buildVersion: '16.14.0',
 
     // ── Feature flags ─────────────────────────────────────────────────
     enableBuild    : true,
